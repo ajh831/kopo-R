@@ -62,6 +62,8 @@ library("ggthemes")
 
 ggplot(TS, aes(x=Date, y=Sales)) + geom_line()
 
+ggplot
+
 ggplot(TS, aes(x=factor(Date), y=Sales, group=1)) + geom_line()
 
 ggplot(TS, aes(x=factor(Date), y=Sales, group=1)) + geom_line() + geom_point()
