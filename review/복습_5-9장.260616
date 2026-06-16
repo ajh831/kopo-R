@@ -1,0 +1,731 @@
+DF <- read.csv("example_studentlist.csv", fileEncoding="CP949")
+head(DF)
+
+search()
+detach(DF)
+attach(DF)
+
+mean(height, na.rm=T)
+
+median(height, na.rm=T)
+range(height, na.rm=T)
+
+quantile(height, na.rm=T)
+IQR(height, na.rm=T)
+
+summary(height, na.rm=T)
+boxplot(height)
+
+cor(height, weight)
+cor.test(height, weight)
+
+cor(DF[,c(3,7,8)])
+
+cor(height, weight, use="complete.obs")
+
+DF2 <- DF
+DF2[2,7] <- NA
+DF2[4,8] <- NA
+DF2
+
+detach(DF)
+attach(DF2)
+
+cor(height, weight, use="everything")
+
+cor(height, weight, use="all.obs")
+
+var(height, na.rm=T)
+
+var(height, weight, na.rm=T)
+
+var(DF[, c(3,7,8)], na.rm=T)
+
+sd(height, na.rm=T)
+
+scale(height)
+
+sd(height, na.rm=T) / mean(height, na.rm=T)
+
+DF <- read.csv("example_salary.csv", fileEncoding="CP949", na="-")
+head(DF, 5)
+
+colnames(DF) <- c("age", "salary", "specialSalary", "workingTime", "numberOfWorker", "career", "sex")
+str(DF)
+
+search()
+detach(DF2)
+attach(DF)
+
+Mean <- mean(salary, na.rm=T)
+Mean
+
+Mid <- median(salary, na.rm=T)
+Mid
+
+Range <- range(salary, na.rm=T)
+Range
+
+DF[which(salary==4064286), ]
+
+Qnt <- quantile(salary, na.rm=T)
+Qnt
+
+Salary <- list(
+평균월급=Mean,
+중앙값월급=Mid,
+월급범위=Range,
+월급사분위=Qnt
+)
+Salary
+
+DF <- read.csv("example_salary.csv", fileEncoding="CP949", na="-")
+head(DF, 5)
+
+colnames(DF) <- c("age", "salary", "specialSalary", "workingTime", "numberOfWorker", "career", "sex")
+str(DF)
+
+temp <- tapply(salary, sex, mean, na.rm=T)
+temp
+
+library(ggplot2)
+library(reshape2)
+
+melt <- melt(temp)
+melt
+
+ggplot(
+melt,
+aes(x=Var1, y=value, fill=Var1)
+) + geom_bar(
+stat="identity")
+
+tapply(salary, sex, sd, na.rm=T)
+
+tapply(salary, sex, range, na.rm=T)
+
+temp <- tapply(salary, career, mean, na.rm=T)
+temp
+
+melt <- melt(temp)
+melt
+
+ggplot(melt, aes(x=Var1, y=value, group=1)) +
+geom_line(color="skyblue2", size=2) + 
+coord_polar() +
+ylim(c(0, max(salary))
+)
+
+tapply(salary, career, sd, na.rm=T)
+
+tapply(salary, career, range, na.rm=T)
+
+a1 <- DF[which(salary==1172399), ]
+a2 <- DF[which(salary==1685204), ]
+a3 <- DF[which(salary==1117605), ]
+a4 <- DF[which(salary==1245540), ]
+a5 <- DF[which(salary==1548036), ]
+
+list <- list(a1,a2,a3,a4,a5)
+list
+
+DF <- read.csv("example_cancer.csv", fileEncoding="CP949", na="기록없음")
+head(DF)
+
+search()
+detach(DF)
+attach(DF)
+
+mean(age, na.rm=T)
+
+summary(age, na.rm=T)
+
+boxplot(age, range=1.5)
+grid()
+
+distIQR <- IQR(age, na.rm=T)
+distIQR
+
+posIQR <- quantile(age, prob=c(0.25, 0.75), na.rm=T)
+posIQR
+
+DownWhisker <- posIQR[[1]] - distIQR
+UpWhisker <- posIQR[[2]] + distIQR
+
+DownWhisker; UpWhisker 
+
+Outlier <- subset(DF, subset=(age < DownWhisker | age > UpWhisker))
+Outlier
+
+DF <- read.csv("example_salary.csv", fileEncoding="CP949", na="-")
+head(DF, 5)
+
+colnames(DF) <- c("age", "salary", "specialSalary", "workingTime", "numberOfWorker", "career", "sex")
+str(DF)
+
+search()
+detach(DF)
+attach(DF)
+
+Scale <- scale(salary)
+head(Scale, 10)
+
+DF <- cbind(DF, scale=Scale)
+DF
+str(DF)
+
+g1 <- ggplot(DF, aes(x=scale, y=age))
+g2 <- geom_segment(aes(yend=age), xend=0)
+g3 <- g1 + g2 + geom_point(size=7, aes(color=sex, shape=career)) + theme_minimal()
+
+g3
+
+library(ggmap)
+
+register_google(key=Sys.getenv("GOOGLE_API_KEY"))
+
+map <- get_googlemap(
+center=c(126.975684, 37.572752)
+)
+ggmap(map)
+
+map <- get_googlemap(
+center=c(126.975684, 37.572752),
+maptype="roadmap"
+)
+ggmap(map)
+
+map <- get_googlemap(
+center=c(126.975684, 37.572752),
+maptype="roadmap",
+zoom=17
+)
+ggmap(map)
+
+map <- get_googlemap(
+center=c(126.975684, 37.572752),
+maptype="roadmap",
+zoom=17,
+size=c(320,320)
+)
+ggmap(map)
+
+map <- get_googlemap(
+center=c(126.975684, 37.572752),
+maptype="roadmap",
+zoom=17,
+size=c(320,320)
+)
+ggmap(map, extent="device")
+
+gc <- geocode(enc2utf8("호미곶"))
+gc
+
+lonlat <- c(gc$lon, gc$lat)
+lonlat
+
+map <- get_googlemap(
+center=lonlat
+)
+ggmap(map)
+
+gc <- geocode(enc2utf8("호미곶"))
+gc
+
+lonlat <- c(gc$lon, gc$lat)
+lonlat
+
+map <- get_googlemap(
+center=lonlat,
+marker=gc
+)
+ggmap(map)
+
+names <- c("도담상봉/석문", "구담/옥순봉", "사인암", "하선암", "중선암", "상선암")
+
+addr <- c("충청북도 단양군 매포읍 삼봉로 644-33",
+"충청북도 단양군 단성면 월악로 3827",
+"충청북도 단양군 대강면 사인암2길 42",
+"충청북도 단양군 단성면  선암계곡로 1337",
+"충청북도 단양군 단성면  선암계곡로 868-2",
+"충청북도 단양군 단성면  선암계곡로 790"
+)
+
+gc <- geocode(enc2utf8(addr))
+gc
+
+df <- data.frame(
+name=names,
+lon=gc$lon,
+lat=gc$lat
+)
+df
+
+cen <- c(
+(max(df$lon) + min(df$lon)) / 2,
+(max(df$lat) + min(df$lat)) / 2
+)
+
+cen
+
+map <- get_googlemap(
+center=cen,
+maptype="roadmap",
+zoom=12,
+marker=gc
+)
+ggmap(map)
+
+gmap <- ggmap(map)
+
+gmap + geom_text(
+data=df,
+aes(x=lon, y=lat),
+size=5,
+label=df$name
+)
+
+library(openxlsx)
+df <- read.xlsx(file.choose(), sheet=1, startRow=4)
+df
+
+df[,6] <- gsub(" N", "", df[,6])
+df[,7] <- gsub(" E", "", df[,7])
+
+lon <- df[,7]
+lat <- df[,6]
+mag <- df[,3]
+
+df2 <- data.frame(lon, lat, mag)
+str(df2)
+
+df2[,1] <- as.numeric(as.character(df2[,1]))
+df2[,2] <- as.numeric(as.character(df2[,2]))
+
+str(df2)
+
+cen <- c(
+(max(df2$lon) + min(df2$lon)) / 2,
+(max(df2$lat) + min(df2$lat)) / 2
+)
+
+cen
+
+map <- get_googlemap(
+center=cen,
+zoom=6
+)
+
+gmap <- ggmap(map)
+
+gmap + geom_point(
+data=df2,
+aes(x=df2$lon, y=df2$lat),
+color="red",
+size=mag,
+alpha=0.5
+)
+
+library(XML)
+
+api <- "http://apis.data.go.kr/B552584/ArpltnStatsSvc/getCtprvnMesureLIst"
+api_key <- Sys.getenv("DATA_GO_API")
+api_key
+
+returnType<-"xml"
+numOfRows<-10
+pageNo<-1
+itemCode<-"PM10"
+dataGubun<-"HOUR"
+searchCondition<-"MONTH"
+
+url <- paste(api,
+"?serviceKey=", api_key,
+"&returnType=", returnType,
+"&numOfRows=", numOfRows,
+"&pageNo=", pageNo,
+"&itemCode=", itemCode,
+"&dataGubun=", dataGubun,
+"&searchCondition=", searchCondition,
+sep=""
+)
+
+url
+
+xmlFile <- xmlParse(url)
+xmlRoot(xmlFile)
+
+df <- xmlToDataFrame(getNodeSet(xmlFile, "//items/item"))
+df
+
+ggplot(df,
+aes(x=dataTime, y=seoul)) +
+geom_bar(stat="identity", fill="green")
+
+ggplot(df, aes(x=dataTime, y=seoul)) +
+geom_bar(stat="identity", fill="green") +
+theme(axis.text.x=element_text(angle=90)) +
+labs(title="시간대별 서울지역의 미세먼지 농도 변화",
+x="측정일시",
+y="농도")
+
+ggplot(df, aes(x=dataTime, y=seoul, fill=dataTime)) +
+geom_bar(stat="identity") +
+theme(axis.text.x=element_text(angle=90)) +
+labs(title="시간대별 서울지역의 미세먼지 농도 변화",
+x="측정일시",
+y="농도") +
+scale_fill_manual(values=rainbow(10))
+
+ggplot(df, aes(x=dataTime, y=seoul, fill=dataTime)) +
+geom_bar(stat="identity") +
+theme(
+axis.text.x=element_text(angle=90),
+legend.position="none") +
+labs(title="시간대별 서울지역의 미세먼지 농도 변화",
+x="측정일시",
+y="농도") +
+scale_fill_manual(values=rainbow(10))
+
+wordcloud(nouns.df.sort[,1],
+freq=nouns.df.sort[,2],
+min.freq=1,
+scale=c(5,0.7),
+rot.per=0.25,
+random.order=F,
+random.color=T,
+colors=rainbow(10))
+
+nouns <- nouns(iconv(word_data2, "utf-8"))
+
+nouns.all <- unlist(nouns, use.names=F)
+
+nouns.all2 <- nouns.all[nchar(nous.all) >= 2]
+
+nouns.freq <- table(nouns.all2)
+
+nouns.df <- data.frame(nouns.freq, stringsAsFactors=F)
+
+nouns.df.sort <- nouns.df[order(-nouns.df$Freq), ]
+
+wordcloud2(nouns.df.sort)
+
+wordcloud2(
+nouns.df.sort,
+backgroundColor="black"
+color="random-light"
+)
+
+wordcloud2(
+nouns.df.sort,
+size=1.2,
+fontFamily="맑은고딕",
+shape="star",
+backgroundColor="black",
+color="random-light"
+)
+
+text <- readLines("wordcloud.txt")
+
+corpus <- VCorpus(VectorSource(text))
+
+inspect(tm_map(tm_map(text, tolower)), removePunctuation)[1])
+
+corpus <- tm_map(corpus, content_transformer(stripWhitespace))
+corpus <- tm_map(corpus, content_transformer(tolower))
+corpus <- tm_map(corpus, content_tranformer(removePunctuation))
+corpus <- tm_map(corpus, removeWords, stopWords="english")
+
+tdm <- TermDocumentMatrix(corpus)
+
+m <- as.matrix(tdm)
+
+wordFreq <- sort(rowSums(m), decreasing=TRUE)
+
+pal <- brewer.pal(8, "Dark2")
+
+wordcloud(
+words=names(wordFreq),
+freq=wordFreq,
+scale=c(8,0.4),
+min.freq=2,
+rot.per=0.25,
+random.order=F,
+random.color=T,
+colors=pal
+)
+
+cor(height, weight, use="complete.obs")
+
+DF[which(salary==4064286),]
+
+
+temp <- tapply(salary, sex, mean, na.rm=T)
+
+melt <- melt(temp)
+
+ggplot(melt,
+aes(x=Var1, y=value, fill=Var1)) +
+geom_bar(
+stat="identity"
+)
+
+ggplot(melt,
+aes(x=Var1, y=value, group=1)) +
+geom_bar(
+color="skyblue2",
+size=2) +
+coord_polar() +
+ylim(0, max(salary))
+
+distIQR <- IQR(age, na.rm=T)
+
+posIQR <- quantile(age, prob=c(0.25, 0.75), na.rm=T)
+
+Outlier <- subset(age, subset=(age < DownWhisker | age > UpWhisker))
+
+
+g1 <- ggplot(
+df, aes(x=scale, y=age)
+)
+
+g2 <- geom_segment(aes(yend=age), xend=0)
+
+g3 <- g1 + g2 + geom_point(
+size=7,
+aes(color=sex,shape=career)
+) + theme_minimal()
+
+g3
+
+map <- get_googlemap(
+df,
+aes(x=lon, y=lat),
+size=5,
+label= name
+)
+
+gmap <- gmap(map)
+gmap + geom_text(
+data=df,
+aes(x=lon, y=lat),
+size=5,
+label=df$name
+)
+
+df <- read.csv(file.choose(), sheet=1, startTow=4)
+
+df[,6] <- gsub(" N", "", df[,6])
+df[,7] <- gsub(" E", "", df[,7])
+
+
+map <- get_googlemap(
+center=cen,
+zoom=6
+)
+
+gmap <- ggmap(map)
+
+gmap + geom_point(
+data=df,
+aes(x=lon, y=lat),
+color="red",
+size=mag,
+alpha=0.5
+)
+
+ggplot(df, aes(x=dataTime, y=seoul, fill=dataTime)) + 
+geom_bar(stat="identity", fill="green") +
+theme(
+axis.text.x=element_text(angle=90)
+) +
+labs(
+title="",
+x="",
+y=""
+)
+
+ggplot(
+df, aes(x=dataTime, y=seoul)
+) +
+geom_bar(
+stat="identity"
+) +
+theme(
+axis.x.text=element_text(angle=90)
+) +
+labs(
+) +
+scale_fill_maual(
+values=rainbow(10)
+)
+
+ggmap(map) + geom_point(
+data=df,
+aes(x=경도, y=위도),
+color=rainbow(length(df$미세먼지)),
+size=df*0.3,
+alpha=0.5
+)
+
+critYr_f <- table(critYr)
+
+barplot(
+data=critYr_f,
+col=rainbow(10),
+main="",
+xlab="",
+ylab="",
+ylim=c()
+)
+
+ptAge_f <- factor(df$ptAge %/% 10,
+levels=c(3,4,5,6,7,8),
+lables=c(~~~~))
+
+summary(ptAge_f)
+
+ptSexCd_f <- factor(
+ptSexCd,
+levels=c(~~),
+labels=c(~~)
+)
+
+ptSexAge_f <- table(ptAge_f, ptSexCd_f)
+
+barplot(ptSexAge_f,
+main="~~",
+xlab ="", ylab="", ylim=c(,),
+col=c("blue", "pink"),
+legend=rownames(ptSexAge_f)
+)
+
+treemap(
+addr_count,
+index=".",
+vSize=Freq,
+title="~~~"
+)
+
+arrange(addr_count, desc(Freq))
+
+query <- ULRencode(iconv("빅데이터", "enc-kr", "utf-8"))
+
+url <- paste(api + "?query=" + query + "&display=20", sep="")
+
+response <- GET(
+url,
+add_header(
+'' = client_id,
+'' = client_secret
+)
+)
+
+doc <- content(resonse, "text", encoding="utf-8")
+
+xmlFile <- xmlParse(doc)
+df <- xmlToDataFrame(getNodeSet(xmlFile, "//item"))
+str(df)
+
+description <- df[,4]
+description2 <- gsub("\\d|<b>|</b>|&quot;", "", description)
+
+nouns <- nouns(iconv(description2, "utf-8"))
+nouns.all <- unlist(nouns, use.names=F)
+
+nouns.all1 <- nouns.all[nchar(nouns.all) <= 1]
+nouns.all2 <- nouns.all[nchar(nouns.all) >= 2]
+
+nouns.freq <- table(nouns.all2)
+
+nouns.df <- data.frame(nouns.freq, stringsAsFactors=F)
+nouns.df.sort <- nouns.df[order(-nouns.df$freq), ]
+
+wordcloud(
+data=nouns.df.sort[,1],
+freq=nouns.df.sort[,2],
+min.freq=1,
+scale=c(5, .7),
+rot.per=0.25,
+random.order=F,
+random.color=T,
+colors=rainbow(10)
+)
+
+wordcloud2(~~)
+
+wordcloud2(
+data,
+backgroundColor="black",
+color="random-light"
+)
+
+wordcloud2(
+data,
+backgroundColor="black",
+color="random-light",
+size=1.2,
+fontFamily="맑은고딕",
+shape="star"
+)
+
+corpus <- Vcorpus(VectorSource(text))
+
+tm_map(corpus, removePunctutaion)
+
+inspect(tm_map(tm_map(corpus, tolower), removePunctuation)[1])
+
+corpus <- tm_map(corpus, content_transformer(splitWhitespace))
+corpus <- tm_map(corpus, content_transformer(tolower)),
+corpus <- tm_map(corpus, content_transformer(removePunctutation))
+corpus <- tm_map(corpus, removeWords, stopWords('english'))
+
+tdm <- TermDocumentMetrix(corpus)
+
+m <- as.matrix(tdm)
+
+wordFreq <- sort(rowSums(m), decreasing=TRUE)
+
+pal <- brewer.pal(8, color="Dark2")
+
+wordcloud(
+words=names(wordFreq),
+freq=wordFreq,
+scale=c(,),
+min.freq=2,
+rot.per=0.25,
+random.color=T,
+random.order=F,
+colors=pal
+)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
